@@ -50,7 +50,7 @@ public class CommitLeaveHandler extends BaseHandler {
             if (Objects.isNull(employeePO)) {
                 return;
             }
-            realWork(reqVO, employeePO);
+            realWorkDo(reqVO, employeePO);
         } catch (Exception e) {
             log.error("提交调休申请失败:", e);
             // 记录数据库
@@ -61,7 +61,7 @@ public class CommitLeaveHandler extends BaseHandler {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    void realWork(CommitLeaveReqVO reqVO, EmployeePO employeePO) throws IOException {
+    void realWorkDo(CommitLeaveReqVO reqVO, EmployeePO employeePO) throws IOException {
         JSONObject calLeaveTimeObj = new JSONObject();
         calLeaveTimeObj.put("A0188", employeePO.getEhrBn());
         calLeaveTimeObj.put("A0188s", employeePO.getEhrBn());
@@ -104,17 +104,17 @@ public class CommitLeaveHandler extends BaseHandler {
         data.put("K_LEAVE_LEAVE_DAYS", reqVO.getLeaveDays());
         data.put("K_LEAVE_LEAVEFILE", StringUtils.EMPTY);
         data.put("K_LEAVE_SIGNED", "0");
+        data.put("SequenceID", "0");
+        data.put("@RowState", "Added");
         data.put("DataRightType", "0");
         data.put("ValidateState", "1");
         data.put("FormulaState", "1");
-        data.put("SequenceID", "0");
-        data.put("@RowState", "Added");
         JSONObject dataSet = new JSONObject();
         dataSet.put("DATA", data);
         JSONObject jDataXml = new JSONObject();
         jDataXml.put("DataSet", dataSet);
-        reqJsonObject.put("JDataXML", jDataXml);
         reqJsonObject.put("JOriginalDataXML", jOriginalDataXml);
+        reqJsonObject.put("JDataXML", jDataXml);
         String json = JSON.toJSONString(reqJsonObject);
         String result = HttpConnectionUtils.doPost("http://ehr.1919.cn:81/api/ComService/UpdateEx?ap=" + employeePO.getEhrAp(),
                 json, false);
@@ -148,7 +148,7 @@ public class CommitLeaveHandler extends BaseHandler {
                     continue;
                 }
                 CommitLeaveReqVO reqVO = CopyUtil.copyProperties(commitLeavePO, new CommitLeaveReqVO());
-                realWork(reqVO, employeePO);
+                realWorkDo(reqVO, employeePO);
                 // 没有出现异常任务执行成功
                 commitLeavePO.setSuccess(true);
                 commitLeaveMapper.updateById(commitLeavePO);
