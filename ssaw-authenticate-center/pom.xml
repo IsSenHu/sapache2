@@ -29,4 +29,19 @@
             <version>1.0.1</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <!-- 自己的仓库 -->
+        <repository>
+            <id>nexus</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://192.168.0.103:16386/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>
