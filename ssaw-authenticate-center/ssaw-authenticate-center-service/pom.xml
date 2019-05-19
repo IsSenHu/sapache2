@@ -167,6 +167,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>ssaw-authenticate-center-service</finalName>
 	</build>
 
 	<repositories>
