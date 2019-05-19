@@ -120,6 +120,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>ssaw-my-helper</finalName>
     </build>
 
     <repositories>
