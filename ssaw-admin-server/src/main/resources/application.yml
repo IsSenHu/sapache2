@@ -1,0 +1,30 @@
+server:
+  port: 8788
+spring:
+  application:
+    name: spring-boot-admin
+  profiles:
+    active: secure
+  security:
+    user:
+      name: admin
+      password: 521428Slyp
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:14780118635@118.24.38.46:10001/eureka/
+  instance:
+    prefer-ip-address: true
+    metadata-map:
+      user.name: admin
+      user.password: 521428Slyp
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS

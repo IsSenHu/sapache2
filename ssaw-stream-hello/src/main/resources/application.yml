@@ -1,0 +1,20 @@
+server:
+  port: 20003
+
+spring:
+  application:
+    name: ssaw-stream-hello
+  rabbitmq:
+    host: 118.24.38.46
+    port: 5672
+    username: husen
+    password: 521428
+    virtual-host: /
+
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: ssaw-sensor-data
+          group: Group-A                      #指定分组 同一组一个消息只有一个实例会消费
+          content-type: application/json

@@ -1,0 +1,32 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: ssaw-job-admin
+  datasource:
+    name: ssaw_job
+    url: jdbc:mysql://127.0.0.1:3306/ssaw_job?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 521428Slyp
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      filter: mergeStat,slf4j
+      max-active: 10000
+      initial-size: 5
+      max-wait: 60000
+      min-idle: 3
+      time-between-eviction-runs-millis: 18000000
+      min-evictable-idle-time-millis: 1000000
+      validation-query: SELECT1FROMDUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 100
+      max-pool-prepared-statement-per-connection-size: 50
+      remove-abandoned: true
+      remove-abandoned-timeout: 1800
+      log-abandoned: false
+mybatis-plus:
+  mapper-locations: classpath:mapper/*Mapper.xml

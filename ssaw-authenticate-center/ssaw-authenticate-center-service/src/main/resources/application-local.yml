@@ -1,0 +1,122 @@
+#spring:
+#  application:
+#    name: ssaw-authenticate-center
+#  cloud:
+#    nacos:
+#      config:
+#        endpoint: acm.aliyun.com
+#        namespace: b8c49fc7-d73c-47ca-996c-48c367c9f3da
+#        file-extension: yml
+#        accessKey: LTAINQW8uP6a77PR
+#        secretKey: uF4J9cYvHPLy7BkIf75XNa14NF9Iuo
+#        group: DEFAULT_GROUP
+server:
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+  port: 20008
+  max-http-header-size: 4048576
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:14780118635@localhost:10001/eureka/
+  instance:
+    prefer-ip-address: true
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: ssaw-authenticate-center
+#  rabbitmq:
+#    host: 118.24.38.46
+#    port: 5672
+#    username: husen
+#    password: 521428
+#    virtual-host: /
+
+#  zipkin:
+#    sender:
+#      type: rabbit
+#
+#  sleuth:
+#    web:
+#      client:
+#        enabled: true
+#    sampler:
+#      probability: 1.0
+
+  datasource:
+    url: jdbc:mysql://cdb-h2cg63zg.cd.tencentcdb.com:10020/ssaw_authenticate_center?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+    username: root
+    password: 19960621Sly
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      filters: mergeStat,config,slf4j
+      max-active: 100
+      initial-size: 10
+      max-wait: 60000
+      min-idle: 3
+      time-between-eviction-runs-millis: 18000000
+      min-evictable-idle-time-millis: 1000000
+      validation-query: SELECT1FROMDUAL
+      test-while-idle: true
+      test-on-borrow: true
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 100
+      max-pool-prepared-statement-per-connection-size: 50
+      remove-abandoned: true
+      remove-abandoned-timeout: 1800
+      log-abandoned: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    show-sql: false
+    open-in-view: false
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+
+  redis:
+    host: 118.24.38.46
+    port: 6379
+    password: 521428Slyt
+    database: 10
+  thymeleaf:
+    cache: false
+    enable-spring-el-compiler: true
+
+ssaw:
+  resource:
+    code: 1
+    resource-id: 认证授权中心
+    description: 认证中心
+    self: true
+    icon: el-icon-location
+    white-list: /api/user/login*,/api/user/logout*,/api/authenticate*,/api/resource/uploadAuthenticateInfo*,/login*,/logout*
+    system-white-list: /api/user/login*,/api/resource/uploadAuthenticateInfo*,/api/authenticate*,/oauth/authorize*,/oauth/token*,/oauth/confirm_access*,/login*
+    static-resource-list: /build/**,/css/**,/dist/**,/font/**,/js/**,/plugins/**
+  manage:
+    client-id: INNER_MANAGE
+    client-secret: 521428Slyp
+    client-registered-redirect-uris: localhost:8080
+    client-expire: 604800  ##七天
+  snow-flake:
+    data-center-id: 2
+    machine-id: 2
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+feign:
+  hystrix:
+    enabled: true

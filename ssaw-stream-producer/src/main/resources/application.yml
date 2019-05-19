@@ -1,0 +1,19 @@
+server:
+  port: 20009
+spring:
+  application:
+    name: SSAW-STREAM-PRODUCER
+  rabbitmq:
+    host: 118.24.38.46
+    port: 5672
+    username: husen
+    password: 521428
+    virtual-host: /
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: stream-demo                   #消息发送的目的地
+          group: Group-A                      #指定分组 同一组一个消息只有一个实例会消费
+          content-type: text/plain            #消息发送的格式，接收端不用指定格式，但是发送端要
+

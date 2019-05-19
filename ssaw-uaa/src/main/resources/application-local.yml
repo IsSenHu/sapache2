@@ -1,0 +1,56 @@
+server:
+  port: 20007
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+  servlet:
+    session:
+      cookie:
+        name: UISESSION
+  max-http-header-size: 4048576
+
+spring:
+  application:
+    name: ssaw-uaa
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:14780118635@localhost:10001/eureka/
+  instance:
+    prefer-ip-address: true   #注册服务时使用ip而非计算机名
+
+ribbon:                             #ribbon配置（Feign的实现基于Ribbon，因此此配置也适用）
+  eager-load:
+    enabled: true                   #开启饥饿加载模式 让RibbonClient提前加载，而非第一次调用时加载
+  OkToRetryOnAllOperations: false   #对所有操作请求都进行重试,默认false
+  ReadTimeout: 30000                #负载均衡超时时间，默认值5000
+  ConnectTimeout: 30000             #ribbon请求连接的超时时间，默认值2000
+  MaxAutoRetries: 0                 #对当前实例的重试次数，默认0
+  MaxAutoRetriesNextServer: 1       #对切换实例的重试次数，默认1
+
+hystrix:
+  command:
+    default:  #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 120000 #断路器超时时间，默认1000ms
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+trace: false

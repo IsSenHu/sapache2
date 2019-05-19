@@ -1,0 +1,43 @@
+server:
+  port: 20006
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:14780118635@www.senhu.com:10001/eureka/
+  instance:
+    prefer-ip-address: true
+
+ribbon:
+  eager-load:
+    enabled: true
+
+spring:
+  application:
+    name: ssaw-sso
+
+  sleuth:
+    web:
+      client:
+        enabled: true
+    sampler:
+      probability: 1.0
+  rabbitmq:
+      host: 118.24.38.46
+      port: 5672
+      username: husen
+      password: 521428
+      virtual-host: /
+
+  zipkin:                     #base-url: http://localhost:17004/
+    sender:
+      type: rabbit
+
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    connection-timeout: 10000
+  header:
+    bearer-token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiU1NBVy1VU0VSLVJFU09VUkNFIl0sInVzZXJfbmFtZSI6ImFkbWluIiwic2NvcGUiOlsiVVNFUl9XUklURSIsIlVTRVJfUk9MRV9XUklURSIsIlVTRVJfUkVBRCIsIlJPTEVfUkVBRCIsIlJPTEVfV1JJVEUiXSwiZXhwIjoxNTQ0ODY2NzUzLCJhdXRob3JpdGllcyI6WyJVU0VSIl0sImp0aSI6ImYxMWJiODcyLWI1ZGEtNDY1Ni04NGVmLWRjNTZlMzNmNDliNCIsImNsaWVudF9pZCI6IlN0YXRpc3RpY2FsQ2VydGlmaWNhdGlvbkNlbnRlciJ9.FQz4cE7wdlmv0A1sn_zpcf_PuG9XizubjhqZ34Ucfbzh3IaLyAAcRm_oNvdm5tZBfhiWoU5tqeMZTVDC6_UUXPwycF5XjgryxVaKT7GNNLF-6SSkKUUEhADDGtUM7dvg292MAhMQfxxBnCex-5koWNCFZ7xGOqO050YmxR8Bmwtznx8nK1G20VJEBsKLR-xyZp9VRJtFjs62Mf1UaQ5-S9rTXA3qIyLXBqWuPVIJ_r9u8YRkzxvBNpmnqm4xbWRvL-9Wg6uUGJHn69iE1mch_ZOuxEIzFcD72i-LVsVKw6OUZKF7eQi6-bwf_y6X0qlg2o3FMkCVVUUYgq4Rq5MUKA
+

@@ -1,0 +1,17 @@
+server:
+  port: 20010
+spring:
+  application:
+    name: SSAW-STREAM-CONSUMER
+  rabbitmq:
+    host: 118.24.38.46
+    port: 5672
+    username: husen
+    password: 521428
+    virtual-host: /
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: stream-demo
+          group: Group-A

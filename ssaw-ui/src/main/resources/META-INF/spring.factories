@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration= \
+  com.ssaw.ssawauthenticatecenterfeign.fallback.AuthenticateFeignFallback,\
+  com.ssaw.ssawui.config.EnableFeignAutoConfiguration

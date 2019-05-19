@@ -1,0 +1,21 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name: SMS-CENTER
+  security:
+    user:
+      name: admin
+      password: 123456
+  data:
+    mongodb:
+      host: 118.24.38.46
+      port: 27017
+      database: ssaw_sms
+      username: husen
+      password: 123456
+      uri: mongodb://${spring.data.mongodb.username}:${spring.security.user.password}@${spring.data.mongodb.host}:${spring.data.mongodb.port}/${spring.data.mongodb.database}
+ssaw:
+  rocketmq:
+    namesrv-addr: 172.18.0.2:9876;172.18.0.3:9876

@@ -1,0 +1,7 @@
+server:
+  port: 20003
+
+spring:
+  application:
+    name: ssaw-resource-server
+

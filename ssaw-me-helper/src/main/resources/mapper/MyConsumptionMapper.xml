@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--suppress ALL -->
+<mapper namespace="com.ssaw.ssawmehelper.dao.mapper.consumption.MyConsumptionMapper">
+
+    <!-- 批量保存我的收入 -->
+    <insert useGeneratedKeys="true" id="saveAll" parameterType="java.util.List" keyProperty="id">
+        INSERT INTO
+            tb_my_consumption
+            (
+                cost_date,
+                expenditure,
+                income,
+                net_expenditure,
+                user_id
+            )
+            VALUES
+            <foreach collection="list" item="obj" index="index" separator=",">
+                (
+                    #{obj.costDate},
+                    #{obj.expenditure},
+                    #{obj.income},
+                    #{obj.netExpenditure},
+                    #{obj.userId}
+                )
+            </foreach>
+    </insert>
+
+    <!-- 根据消费日期查询我的消费记录 -->
+    <select id="findByCostDateAndUserId" resultType="com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO">
+        SELECT
+            id AS id,
+            cost_date AS costDate,
+            expenditure AS expenditure,
+            income AS income,
+            net_expenditure as netExpenditure,
+            user_id AS userId
+        FROM
+            tb_my_consumption
+        WHERE
+            cost_date = #{costDate} AND user_id = #{userId}
+    </select>
+
+    <!-- 分页查询我的消费 -->
+    <select id="findAll" resultType="com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO">
+        SELECT
+            id AS id,
+            cost_date AS costDate,
+            expenditure AS expenditure,
+            income AS income,
+            net_expenditure as netExpenditure,
+            user_id AS userId
+        FROM
+            tb_my_consumption
+        WHERE user_id = #{userId}
+        <if test="query.start != null and query.start != ''">
+            AND cost_date >= #{query.start}
+        </if>
+        <if test="query.end != null and query.end != ''">
+            AND cost_date &lt;= #{query.end}
+        </if>
+    </select>
+
+    <!-- 根据用户名，开始时间，结束时间查询我的消费 -->
+    <select id="findAllByUserIdAndStartAndEnd" resultType="com.ssaw.ssawmehelper.dao.po.consumption.MyConsumptionPO">
+        SELECT
+            id AS id,
+            cost_date AS costDate,
+            expenditure AS expenditure,
+            income AS income,
+            net_expenditure as netExpenditure,
+            user_id AS userId
+        FROM
+            tb_my_consumption
+        WHERE user_id = #{userId} AND cost_date >= #{start} AND cost_date &lt;= #{end}
+    </select>
+</mapper>

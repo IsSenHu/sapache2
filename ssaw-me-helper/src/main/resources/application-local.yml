@@ -1,0 +1,113 @@
+server:
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+  port: 22000
+  max-http-header-size: 4048576
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:14780118635@localhost:10001/eureka/
+  instance:
+    prefer-ip-address: true
+
+spring:
+  application:
+    name: ssaw-my-helper
+  datasource:
+    name: ssaw_my_helper
+    url: jdbc:mysql://cdb-h2cg63zg.cd.tencentcdb.com:10020/ssaw_my_helper?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 19960621Sly
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      filter: mergeStat,slf4j
+      max-active: 10000
+      initial-size: 5
+      max-wait: 60000
+      min-idle: 3
+      time-between-eviction-runs-millis: 18000000
+      min-evictable-idle-time-millis: 1000000
+      validation-query: SELECT1FROMDUAL
+      test-while-idle: true
+      test-on-borrow: true
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 100
+      max-pool-prepared-statement-per-connection-size: 50
+      remove-abandoned: true
+      remove-abandoned-timeout: 1800
+      log-abandoned: false
+  main:
+    allow-bean-definition-overriding: true
+
+  redis:
+    host: 118.24.38.46
+    port: 6379
+    password: 521428Slyt
+    database: 2
+#  rabbitmq:
+#    host: 118.24.38.46
+#    port: 5672
+#    username: husen
+#    password: 521428
+#    virtual-host: /
+#  zipkin:
+#    sender:
+#      type: rabbit
+#
+#  sleuth:
+#    web:
+#      client:
+#        enabled: true
+#    sampler:
+#      probability: 1.0
+
+ribbon:                             #ribbon配置（Feign的实现基于Ribbon，因此此配置也适用）
+  eager-load:
+    enabled: true                   #开启饥饿加载模式 让RibbonClient提前加载，而非第一次调用时加载
+  OkToRetryOnAllOperations: false   #对所有操作请求都进行重试,默认false
+  ReadTimeout: 12000                #负载均衡超时时间，默认值5000
+  ConnectTimeout: 12000             #ribbon请求连接的超时时间，默认值2000
+  MaxAutoRetries: 0                 #对当前实例的重试次数，默认0
+  MaxAutoRetriesNextServer: 1       #对切换实例的重试次数，默认1
+
+hystrix:
+  command:
+    default:  #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 12000 #断路器超时时间，默认1000ms
+
+feign:
+  hystrix:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+ssaw:
+  resource:
+    code: 2
+    resource-id: 我的小帮手
+    description: 我的小帮手
+    self: true
+    icon: el-icon-share
+    white-list: /api/test
+  snow-flake:
+    data-center-id: 1
+    machine-id: 1
+mybatis-plus:
+  mapper-locations: classpath:mapper/*Mapper.xml

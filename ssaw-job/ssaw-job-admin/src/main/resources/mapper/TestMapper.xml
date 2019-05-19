@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--suppress ALL -->
+<mapper namespace="com.ssaw.job.admin.dao.mapper.test.TestMapper">
+    <select id="findByFirstName" parameterType="java.lang.String" resultType="com.ssaw.job.admin.dao.po.TestPO">
+        SELECT FIRST_NAME AS firstName, LAST_NAME AS lastName FROM TB_TEST where FIRST_NAME = #{firstName}
+    </select>
+</mapper>

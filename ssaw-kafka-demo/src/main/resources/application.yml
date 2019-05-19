@@ -1,0 +1,26 @@
+server:
+  port: 8080
+spring:
+  kafka:
+    bootstrap-servers: 118.24.38.46:9092
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      retries: 3
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      batch-size: 65536
+      buffer-memory: 524288
+      bootstrap-servers: 118.24.38.46:9092
+  application:
+    name: ssaw-kafka-demo
+ssaw:
+  log:
+    kafka:
+      producer:
+        appName: ${spring.application.name}
+#./kafka-server-start.sh -daemon ../config/server.properties
+#./kafka-console-consumer.sh --bootstrap-server 172.27.0.10:9092 --topic test_log

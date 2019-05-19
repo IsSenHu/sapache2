@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--suppress ThymeleafVariablesResolveInspection -->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>授权页面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            您正在进行授权 !!!
+                        </h2>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            在这里，您将对客户端&nbsp;<b th:text="${clientId}"></b>&nbsp;所拥有的资源服务进行授权，请选择要授予权限的服务
+                        </p>
+                        <form id="confirmationForm" name="confirmationForm" action="/oauth/authorize" method="post">
+                            <input name="user_oauth_approval" value="true" type="hidden"/>
+                            <input th:if="${csrfToken != null}" th:name="${csrfToken.parameterName}" th:value="${csrfToken.token}" type="hidden">
+                            <ul>
+                                <li th:each="scopeItem:${scopes}">
+                                    <p th:text="${scopeItem.key}"></p>
+                                    <ul>
+                                        <li th:each="scope:${scopeItem.value}" style="list-style: none;">
+                                            <div class="form-group">
+                                                <div class="row clearfix">
+                                                    <div class="col-md-3 column">
+                                                        <span th:text="${scope.key.substring(scope.key.indexOf('_') + 1)}"></span>
+                                                    </div>
+                                                    <div class="col-md-9 column">&nbsp;
+                                                        <label>
+                                                            <input th:if="${scope.value.equals('true')}" type="radio" th:name="${scope.key}" checked value="true">
+                                                            <input th:if="${!scope.value.equals('true')}" type="radio" th:name="${scope.key}" checked value="true">
+                                                        </label>同意&nbsp;
+                                                        <label>
+                                                            <input th:if="${!scope.key.equals('true')}" type="radio" th:name="${scope.key}" checked value="false">
+                                                            <input th:if="${scope.key.equals('true')}" type="radio" th:name="${scope.key}" checked value="false">
+                                                        </label>拒绝
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <label>
+                                <input name="authorize" class="btn btn-success" value="确认授权" type="submit">
+                            </label>
+                        </form>
+                    </div>
+                    <div class="panel-footer">
+                        SAPACHE OAUTH2 认证服务
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

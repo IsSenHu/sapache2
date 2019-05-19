@@ -1,0 +1,35 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: SSAW-SWAGGER-DEMO
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://127.0.0.1:3306/ssaw_jpa?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+    username: root
+    password: 521428Slyp
+    hikari:
+      minimum-idle: 5                 #定必须保持连接的最小值
+      maximum-pool-size: 15           #最大连接数 包括使用中的和空闲中的
+      auto-commit: true               #指定updates是否自动提交.
+      idle-timeout: 30000             #指定连接多久没被使用时，被设置为空闲，默认为10ms
+      pool-name: ssawJpaCP            #指定连接池名字.
+      max-lifetime: 1800000           #指定连接池中连接的最大生存时间，毫秒单位.
+      connection-timeout: 30000       #指定连接的超时时间，毫秒单位.
+      connection-test-query: SELECT 1 #指定校验连接合法性执行的sql语句
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy #驼峰转下划线
+      use-new-id-generator-mappings: false                                                         #设为false GenerationType.AUTO 自动按主键自增
+    open-in-view: true                                                                            #它允许在事务提交之后延迟加载显示所需要的对象
+    database-platform: org.hibernate.dialect.MySQL57Dialect                                        #指定数据库方言mysql5.7 这样引擎也使用innodb
+
+#### physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl -> 无修改名称策略 (表名、列名都不修改)
+#### physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy -> 驼峰转下划线
+#### 从处理的效果上来看，其实没有什么区别，但是从程序设计分层的角度来看，类似于MVC的分层，
+  #ImplicitNamingStrategy只管模型对象层次的处理，
+  #PhysicalNamingStrategy只管映射成真实的数据名称的处理

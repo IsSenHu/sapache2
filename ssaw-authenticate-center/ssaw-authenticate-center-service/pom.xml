@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>ssaw-authenticate-center-service</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>ssaw-authenticate-center-service</name>
+	<description>认证中心服务</description>
+
+	<parent>
+		<groupId>com.ssaw</groupId>
+		<artifactId>ssaw-authenticate-center</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<support-druid.version>1.0.0</support-druid.version>
+		<support-jpa.version>1.0.0</support-jpa.version>
+		<support-redis.version>1.0.0</support-redis.version>
+		<support-oauth2.version>1.0.0</support-oauth2.version>
+		<ssaw-authenticate-center-feign.version>1.0.0</ssaw-authenticate-center-feign.version>
+	</properties>
+
+	<dependencies>
+		<!-- thymeleaf 支持 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<!-- spring-cloud服务注册与发现 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
+		<!-- openfeign -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+
+		<!-- spring-cloud断路器（feign自带断路器，可以不要此依赖，但要使用断路器监控就必须要） -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+		</dependency>
+
+		<!-- bus stream 必须引该依赖 -->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-netflix-hystrix-stream</artifactId>-->
+		<!--</dependency>-->
+
+		<!-- stream rabbit -->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-starter-stream-rabbit</artifactId>-->
+		<!--</dependency>-->
+
+		<!-- 单元测试 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- support-jpa -->
+		<dependency>
+			<groupId>com.ssaw</groupId>
+			<artifactId>support-jpa</artifactId>
+			<version>${support-jpa.version}</version>
+		</dependency>
+
+		<!-- druid -->
+		<dependency>
+			<groupId>com.ssaw</groupId>
+			<artifactId>support-druid</artifactId>
+			<version>${support-druid.version}</version>
+			<type>pom</type>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-aop</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-actuator</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.retry</groupId>
+					<artifactId>spring-retry</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.projectlombok</groupId>
+					<artifactId>lombok</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		 <!--config client -->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-config-client</artifactId>-->
+		<!--</dependency>-->
+
+		<!-- acm -->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
+			<!--<version>0.2.1.RELEASE</version>-->
+		<!--</dependency>-->
+
+		<!-- 消息总线 -->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
+		<!--</dependency>-->
+
+		<!-- zipkin 服务跟踪 -->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-starter-zipkin</artifactId>-->
+		<!--</dependency>-->
+
+		<!-- self feign -->
+        <dependency>
+            <groupId>com.ssaw</groupId>
+            <artifactId>ssaw-authenticate-center-feign</artifactId>
+            <version>${ssaw-authenticate-center-feign.version}</version>
+        </dependency>
+
+		<!-- oauth2 支持 -->
+		<dependency>
+			<groupId>com.ssaw</groupId>
+			<artifactId>support-oauth2</artifactId>
+			<version>${support-oauth2.version}</version>
+		</dependency>
+
+		<!-- redis支持 -->
+		<dependency>
+			<groupId>com.ssaw</groupId>
+			<artifactId>support-redis</artifactId>
+			<version>${support-redis.version}</version>
+			<type>pom</type>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud-dependencies.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<!-- 自己的仓库 -->
+		<repository>
+			<id>nexus</id>
+			<name>Nexus Snapshot Repository</name>
+			<url>http://192.168.0.103:16386/repository/maven-public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+</project>
