@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/config")
-@SecurityApi(index = "1", group = "配置", menu = @Menu(index = "1-1", title = "配置管理", scope = "配置管理", to = "/my/config/manage"))
+@SecurityApi(index = "1", group = "配置", menu = @Menu(index = "1-1", title = "配置管理", scope = "配置管理", to = "/config/manage"))
 public class ConfigController extends BaseController {
 
     private final ConfigService configService;
