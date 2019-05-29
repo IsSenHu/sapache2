@@ -32,6 +32,11 @@ public class ConfigViewVO {
     private String label;
 
     /**
+     * 配置文件类型
+     * */
+    private String type;
+
+    /**
      * 修改时间
      * */
     private LocalDateTime modifyTime;

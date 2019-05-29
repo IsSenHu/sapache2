@@ -22,4 +22,7 @@ public class ConfigCreateVO {
 
     @NotBlank(message = "text require not null")
     private String text;
+
+    @NotBlank(message = "type require not null")
+    private String type;
 }
