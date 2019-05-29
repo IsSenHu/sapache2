@@ -24,6 +24,11 @@ spring:
       password: 521428Slyt
   profiles:
     active: mongodb
+  rabbitmq:
+    host: 118.24.38.46
+    port: 5672
+    username: husen
+    password: 521428
 
 ssaw:
   resource:
@@ -32,3 +37,12 @@ ssaw:
     description: 配置中心
     self: true
     icon: el-icon-setting
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh,refresh,info,health
+  endpoint:
+    health:
+      show-details: always
