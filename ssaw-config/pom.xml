@@ -79,7 +79,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <finalName>ssaw-me-helper</finalName>
+        <finalName>ssaw-config</finalName>
     </build>
 
     <repositories>
