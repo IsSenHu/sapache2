@@ -1,4 +1,4 @@
-package com.ssaw;
+package com.ssaw.ssawauthenticatecenterservice;
 
 import com.ssaw.commons.enable.EnableAutoRequestResolve;
 import com.ssaw.commons.util.app.ApplicationContextUtil;

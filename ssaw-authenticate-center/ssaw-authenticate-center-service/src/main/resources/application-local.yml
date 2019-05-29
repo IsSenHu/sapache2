@@ -99,14 +99,6 @@ ssaw:
     white-list: /api/user/login*,/api/user/logout*,/api/authenticate*,/api/resource/uploadAuthenticateInfo*,/login*,/logout*
     system-white-list: /api/user/login*,/api/resource/uploadAuthenticateInfo*,/api/authenticate*,/oauth/authorize*,/oauth/token*,/oauth/confirm_access*,/login*
     static-resource-list: /build/**,/css/**,/dist/**,/font/**,/js/**,/plugins/**
-  manage:
-    client-id: INNER_MANAGE
-    client-secret: 521428Slyp
-    client-registered-redirect-uris: localhost:8080
-    client-expire: 604800  ##七天
-  snow-flake:
-    data-center-id: 2
-    machine-id: 2
 
 management:
   endpoints:

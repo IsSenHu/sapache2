@@ -26,7 +26,6 @@ public class App {
      */
     @Configuration
     public class FeignConfiguration implements RequestInterceptor {
-
         @Override
         public void apply(RequestTemplate requestTemplate) {
             String token = TokenStore.current();

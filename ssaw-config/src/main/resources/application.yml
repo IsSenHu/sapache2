@@ -1,0 +1,34 @@
+server:
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+  port: 10009
+  max-http-header-size: 4048576
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:14780118635@118.24.38.46:10001/eureka/
+  instance:
+    prefer-ip-address: true
+
+spring:
+  application:
+    name: ssaw-config
+  data:
+    mongodb:
+      host: 118.24.38.46
+      port: 27017
+      database: config_repos
+      username: senhu
+      password: 521428Slyt
+  profiles:
+    active: mongodb
+
+ssaw:
+  resource:
+    code: 3
+    resource-id: 配置中心
+    description: 配置中心
+    self: true
+    icon: el-icon-setting
