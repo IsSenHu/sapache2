@@ -14,10 +14,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @EnableConfig
 @EnableAutoRequestResolve
-//@EnableUaa
+@EnableUaa
 @EnableDiscoveryClient
 @SpringBootApplication
-//@EnableAutoAuthenticateInfo
+@EnableAutoAuthenticateInfo
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
