@@ -37,8 +37,8 @@ ssaw:
     description: 配置中心
     self: true
     icon: el-icon-setting
-    system-white-list: /actuator/**,/app-**
-    white-list: /actuator/**,/app-**
+    system-white-list: /actuator/**,/app-*/**
+    white-list: /actuator/**,/app-*/**
 
 management:
   endpoints:
