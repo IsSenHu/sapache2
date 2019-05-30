@@ -9,10 +9,8 @@ import com.ssaw.config.sdk.vo.ConfigQueryVO;
 import com.ssaw.config.sdk.vo.ConfigUpdateVO;
 import com.ssaw.config.sdk.vo.ConfigViewVO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author HuSen
@@ -27,8 +25,8 @@ public interface ConfigFeign {
      * @param createVO 创建配置文件数据模型
      * @return 创建结果
      */
-    @PostMapping("/create")
-    CommonResult<ConfigCreateVO> create(ConfigCreateVO createVO);
+    @PostMapping(value = "/create")
+    CommonResult<ConfigCreateVO> create(@RequestBody ConfigCreateVO createVO);
 
     /**
      * 删除配置文件
@@ -54,8 +52,8 @@ public interface ConfigFeign {
      * @param updateVO 修改配置数据模型
      * @return 修改结果
      */
-    @PostMapping("/update")
-    CommonResult<ConfigUpdateVO> update(ConfigUpdateVO updateVO);
+    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    CommonResult<ConfigUpdateVO> update(@RequestBody ConfigUpdateVO updateVO);
 
     /**
      * 展示配置详情

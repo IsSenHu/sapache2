@@ -37,7 +37,7 @@ public class ConfigController {
     @Validating
     @PostMapping("/create")
     @RequestLog(desc = "创建配置文件")
-    public CommonResult<ConfigCreateVO> create(ConfigCreateVO createVO) {
+    public CommonResult<ConfigCreateVO> create(@RequestBody ConfigCreateVO createVO) {
         return configService.create(createVO);
     }
 
@@ -75,7 +75,7 @@ public class ConfigController {
     @PostMapping("/update")
     @Validating
     @RequestLog(desc = "修改配置")
-    public CommonResult<ConfigUpdateVO> update(ConfigUpdateVO updateVO) {
+    public CommonResult<ConfigUpdateVO> update(@RequestBody ConfigUpdateVO updateVO) {
         return configService.update(updateVO);
     }
 

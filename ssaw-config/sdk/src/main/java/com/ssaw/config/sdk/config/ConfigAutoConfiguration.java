@@ -2,12 +2,19 @@ package com.ssaw.config.sdk.config;
 
 import com.ssaw.config.sdk.annotation.EnableConfig;
 import com.ssaw.config.sdk.fallback.ConfigFeignImpl;
+import feign.Feign;
 import feign.Logger;
+import okhttp3.ConnectionPool;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author HuSen
@@ -35,5 +42,28 @@ public class ConfigAutoConfiguration {
     @Bean
     public ConfigFeignImpl configFeignImpl() {
         return new ConfigFeignImpl();
+    }
+
+    @Configuration
+    @ConditionalOnClass(Feign.class)
+    @AutoConfigureBefore(FeignAutoConfiguration.class)
+    public static class FeignOkHttpConfig {
+
+        @Bean
+        public okhttp3.OkHttpClient okHttpClient() {
+            return new okhttp3.OkHttpClient.Builder()
+                    // 设置连接超时
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    // 设置读超时
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    // 设置写超时
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    // 是否自动重连
+                    .retryOnConnectionFailure(true)
+                    // 连接池
+                    .connectionPool(new ConnectionPool())
+                    // 构建OkHttpClient对象
+                    .build();
+        }
     }
 }

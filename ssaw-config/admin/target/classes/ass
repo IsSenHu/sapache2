@@ -3,10 +3,6 @@ server:
   tomcat:
     remote-ip-header: x-forwarded-for
     protocol-header: x-forwarded-proto
-  servlet:
-    session:
-      cookie:
-        name: UISESSION
   max-http-header-size: 4048576
 
 spring:
@@ -18,14 +14,6 @@ spring:
     username: husen
     password: 521428
     virtual-host: /
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://admin:14780118635@118.24.38.46:10001/eureka/
-  instance:
-    prefer-ip-address: true   #注册服务时使用ip而非计算机名
-
 
 ribbon:                             #ribbon配置（Feign的实现基于Ribbon，因此此配置也适用）
   eager-load:
@@ -66,10 +54,6 @@ management:
         include: bus-refresh,refresh,info,health
 feign:
   hystrix:
-    enabled: true
-  httpclient:
-    enabled: false
-  okhttp:
     enabled: true
 logging:
   level:
