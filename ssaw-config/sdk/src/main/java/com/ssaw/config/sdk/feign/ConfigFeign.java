@@ -9,7 +9,6 @@ import com.ssaw.config.sdk.vo.ConfigQueryVO;
 import com.ssaw.config.sdk.vo.ConfigUpdateVO;
 import com.ssaw.config.sdk.vo.ConfigViewVO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -52,7 +51,7 @@ public interface ConfigFeign {
      * @param updateVO 修改配置数据模型
      * @return 修改结果
      */
-    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "/update")
     CommonResult<ConfigUpdateVO> update(@RequestBody ConfigUpdateVO updateVO);
 
     /**
