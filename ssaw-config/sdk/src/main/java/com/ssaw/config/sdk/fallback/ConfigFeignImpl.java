@@ -9,11 +9,13 @@ import com.ssaw.config.sdk.vo.ConfigCreateVO;
 import com.ssaw.config.sdk.vo.ConfigQueryVO;
 import com.ssaw.config.sdk.vo.ConfigUpdateVO;
 import com.ssaw.config.sdk.vo.ConfigViewVO;
+import org.springframework.stereotype.Component;
 
 /**
  * @author HuSen
  * @date 2019/5/30 16:57
  */
+@Component
 public class ConfigFeignImpl implements ConfigFeign {
 
     @Override

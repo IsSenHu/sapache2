@@ -1,11 +1,9 @@
 package com.ssaw.config.sdk.config;
 
 import com.ssaw.config.sdk.annotation.EnableConfig;
-import com.ssaw.config.sdk.fallback.ConfigFeignImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -15,11 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableFeignClients(basePackages = "com.ssaw.config.sdk.feign")
 @ConditionalOnBean(annotation = EnableConfig.class)
+@ComponentScan(basePackages = "com.ssaw.config.sdk.fallback")
 public class ConfigAutoConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean(ConfigFeignImpl.class)
-    public ConfigFeignImpl configFeignImpl() {
-        return new ConfigFeignImpl();
-    }
 }

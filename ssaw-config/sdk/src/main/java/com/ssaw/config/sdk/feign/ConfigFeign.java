@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author HuSen
  * @date 2019/5/30 16:55
  */
-@FeignClient(name = "CONFIG-SERVER", decode404 = true, fallback = ConfigFeignImpl.class)
+@FeignClient(name = "config-server", decode404 = true, fallback = ConfigFeignImpl.class)
 public interface ConfigFeign {
 
     /**

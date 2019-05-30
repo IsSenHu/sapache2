@@ -26,6 +26,7 @@ eureka:
   instance:
     prefer-ip-address: true   #注册服务时使用ip而非计算机名
 
+
 ribbon:                             #ribbon配置（Feign的实现基于Ribbon，因此此配置也适用）
   eager-load:
     enabled: true                   #开启饥饿加载模式 让RibbonClient提前加载，而非第一次调用时加载
@@ -63,3 +64,6 @@ management:
     web:
       exposure:
         include: bus-refresh,refresh,info,health
+feign:
+  hystrix:
+    enabled: true
