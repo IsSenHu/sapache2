@@ -2,7 +2,7 @@ spring:
   cloud:
     config:
       label: master
-      name: app-uaa
+      name: app-hd
       profile: prod
       username: admin
       password: 123456
