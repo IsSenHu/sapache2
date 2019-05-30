@@ -2,6 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <modules>
+        <module>server</module>
+        <module>admin</module>
+        <module>sdk</module>
+    </modules>
+
     <parent>
         <groupId>com.ssaw</groupId>
         <artifactId>base</artifactId>
@@ -10,32 +16,20 @@
     </parent>
 
     <artifactId>ssaw-config</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>ssaw-config</name>
     <description>config配置中心</description>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <properties>
         <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
-        <!-- config server -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-config-server</artifactId>
-        </dependency>
-
         <!-- eureka client -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-
-        <!-- mongodb -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
         <!-- spring-cloud断路器（feign自带断路器，可以不要此依赖，但要使用断路器监控就必须要） -->
@@ -49,13 +43,6 @@
             <groupId>com.ssaw</groupId>
             <artifactId>commons</artifactId>
             <version>1.0.1</version>
-        </dependency>
-
-        <!-- auth sdk -->
-        <dependency>
-            <groupId>com.ssaw</groupId>
-            <artifactId>ssaw-authenticate-center-feign</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <!-- bus -->
@@ -83,16 +70,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-        <finalName>ssaw-config</finalName>
-    </build>
 
     <repositories>
         <repository>

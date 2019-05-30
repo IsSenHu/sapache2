@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>ssaw-config</artifactId>
+        <groupId>com.ssaw</groupId>
+        <version>1.0.1</version>
+    </parent>
+    <artifactId>config-admin</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.0</version>
+    <description>服务端</description>
+
+    <dependencies>
+        <!-- web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- config client -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-config-client</artifactId>
+        </dependency>
+
+        <!-- auth sdk -->
+        <dependency>
+            <groupId>com.ssaw</groupId>
+            <artifactId>ssaw-authenticate-center-feign</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!-- sdk -->
+        <dependency>
+            <groupId>com.ssaw</groupId>
+            <artifactId>config-sdk</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+        <finalName>admin-server</finalName>
+    </build>
+</project>
