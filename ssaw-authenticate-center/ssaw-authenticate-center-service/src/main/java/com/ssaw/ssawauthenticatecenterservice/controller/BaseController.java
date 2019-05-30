@@ -40,7 +40,7 @@ public class BaseController {
             commonResult.setCode(PARAM_ERROR);
             commonResult.setMessage("参数错误!");
             ParamException paramException = (ParamException) e;
-            commonResult.setData(paramException.getErrors());
+            commonResult.setData(paramException.getErrors().values());
             return commonResult;
         }else {
             commonResult.setCode(ERROR);

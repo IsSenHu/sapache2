@@ -4,6 +4,7 @@ import com.ssaw.commons.exceptions.ParamException;
 import com.ssaw.commons.vo.CommonResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import javax.servlet.http.HttpServletRequest;
 
 import static com.ssaw.commons.constant.Constants.ResultCodes.*;
@@ -17,8 +18,9 @@ public class BaseController {
 
     /**
      * 全局统一异常处理
+     *
      * @param request HttpServletRequest请求对象
-     * @param e 异常
+     * @param e       异常
      * @return 异常响应
      */
     @ExceptionHandler
@@ -26,13 +28,13 @@ public class BaseController {
         log.info("请求接口地址:[{}]，发生异常:", request.getRequestURI(), e);
         CommonResult<Object> commonResult = new CommonResult<>();
         commonResult.setTs(System.currentTimeMillis());
-        if(e instanceof ParamException) {
+        if (e instanceof ParamException) {
             commonResult.setCode(PARAM_ERROR);
             commonResult.setMessage("参数错误!");
             ParamException paramException = (ParamException) e;
-            commonResult.setData(paramException.getErrors());
+            commonResult.setData(paramException.getErrors().values());
             return commonResult;
-        }else {
+        } else {
             commonResult.setCode(ERROR);
             commonResult.setMessage("服务器内部错误!");
             commonResult.setData(e.getMessage());

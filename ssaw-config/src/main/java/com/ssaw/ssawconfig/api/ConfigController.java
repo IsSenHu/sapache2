@@ -94,7 +94,6 @@ public class ConfigController extends BaseController {
      * @return 配置详情
      */
     @GetMapping("/showConfig/{appId}")
-    @Validating
     @RequestLog(desc = "展示配置详情")
     @SecurityMethod(antMatcher = "/api/config/showConfig/*", scope = "展示配置详情")
     public CommonResult<String> showConfig(@PathVariable(name = "appId") String appId) {
