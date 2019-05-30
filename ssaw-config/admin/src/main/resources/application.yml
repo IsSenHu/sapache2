@@ -12,6 +12,12 @@ server:
 spring:
   application:
     name: config-admin
+  rabbitmq:
+    host: 118.24.38.46
+    port: 5672
+    username: husen
+    password: 521428
+    virtual-host: /
 
 eureka:
   client:
@@ -45,7 +51,7 @@ ssaw:
     white-list: /actuator/**
     code: 3
     description: 配置中心管理后台
-    resource-id: config-admin
+    resource-id: 配置中心
     icon: el-icon-setting
     self: true
     system-white-list: /actuator/**
