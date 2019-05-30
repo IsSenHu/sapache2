@@ -48,6 +48,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <finalName>admin-server</finalName>
+        <finalName>config-admin</finalName>
     </build>
 </project>
