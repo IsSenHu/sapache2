@@ -67,3 +67,6 @@ management:
 feign:
   hystrix:
     enabled: true
+logging:
+  level:
+    com.ssaw.config.sdk.feign.ConfigFeign: debug
