@@ -2,7 +2,7 @@ spring:
   cloud:
     config:
       label: master
-      name: ac
+      name: app-ac
       profile: prod
       username: admin
       password: 123456
