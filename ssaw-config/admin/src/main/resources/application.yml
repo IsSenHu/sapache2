@@ -16,7 +16,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://admin:14780118635@localhost:10001/eureka/
+      defaultZone: http://admin:14780118635@118.24.38.46:10001/eureka/
   instance:
     prefer-ip-address: true   #注册服务时使用ip而非计算机名
 
