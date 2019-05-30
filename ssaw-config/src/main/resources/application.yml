@@ -48,3 +48,24 @@ management:
   endpoint:
     health:
       show-details: always
+
+hystrix:
+  command:
+    default:  #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          enabled: true                                         #默认为true 为true时hystrix的超时时间控制熔断， 为false时ribbon的超时时间控制熔断。
+        isolation:
+          strategy: THREAD                                      #隔离策略 默认线程隔离策略 可设置为信号量隔离策略
+          thread:
+            timeoutInMilliseconds: 12000                        #断路器超时时间，默认1000ms 要使这个生效 必须配置ribbon.ReadTimeout
+
+feign:
+  hystrix:
+    enabled: true
+
+ribbon:                                                         #Ribbo处理超时配置
+  ReadTimeout: 10000
+  ConnectTimeout: 3000
+  eager-load:
+    enabled: true
