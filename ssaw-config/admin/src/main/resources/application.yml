@@ -45,7 +45,7 @@ ssaw:
     white-list: /actuator/**
     code: 3
     description: 配置中心管理后台
-    resource-id:
+    resource-id: config-admin
     icon: el-icon-setting
     self: true
     system-white-list: /actuator/**
