@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    config:
+      label: master
+      name: app-uaa
+      profile: prod
+      username: admin
+      password: 123456
+      allow-override: false                                          #标识override-system-properties属性是否能够启用，默认true
+      override-none: false                                           #allow-override为true时,override-none true 外部的配置优先级更低，而且不能覆盖任何存在的属性源
+      override-system-properties: false                              #外部配置是否能够被覆盖系统属性
+      discovery:
+        enabled: true
+        service-id: ssaw-config
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:14780118635@118.24.38.46:10001/eureka/
+  instance:
+    prefer-ip-address: true
