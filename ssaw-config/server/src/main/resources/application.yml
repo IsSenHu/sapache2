@@ -2,7 +2,7 @@ server:
   tomcat:
     remote-ip-header: x-forwarded-for
     protocol-header: x-forwarded-proto
-  port: 10009
+  port: 10013
   max-http-header-size: 4048576
 
 eureka:
