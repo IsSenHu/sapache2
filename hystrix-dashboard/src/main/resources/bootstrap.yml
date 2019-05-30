@@ -11,7 +11,7 @@ spring:
       override-system-properties: false                              #外部配置是否能够被覆盖系统属性
       discovery:
         enabled: true
-        service-id: ssaw-config
+        service-id: config-server
 eureka:
   client:
     service-url:
