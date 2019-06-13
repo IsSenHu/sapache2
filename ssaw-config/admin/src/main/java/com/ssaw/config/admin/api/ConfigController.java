@@ -5,11 +5,11 @@ import com.ssaw.commons.annotations.Validating;
 import com.ssaw.commons.vo.CommonResult;
 import com.ssaw.commons.vo.PageReqVO;
 import com.ssaw.commons.vo.TableData;
+import com.ssaw.config.admin.vo.ConfigVO;
 import com.ssaw.config.sdk.feign.ConfigFeign;
 import com.ssaw.config.sdk.vo.ConfigCreateVO;
 import com.ssaw.config.sdk.vo.ConfigQueryVO;
 import com.ssaw.config.sdk.vo.ConfigUpdateVO;
-import com.ssaw.config.sdk.vo.ConfigViewVO;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
@@ -69,8 +69,8 @@ public class ConfigController extends BaseController {
     @PostMapping("/page")
     @RequestLog(desc = "分页查询配置")
     @SecurityMethod(antMatcher = "/api/config/page", scope = "分页查询配置")
-    public TableData<ConfigViewVO> page(@RequestBody PageReqVO<ConfigQueryVO> pageReqVO) {
-        return configFeign.page(pageReqVO);
+    public TableData<ConfigVO> page(@RequestBody PageReqVO<ConfigQueryVO> pageReqVO) {
+        return ConfigVO.of(configFeign.page(pageReqVO));
     }
 
     /**
