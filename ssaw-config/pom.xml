@@ -85,7 +85,7 @@
         <repository>
             <id>nexus</id>
             <name>Nexus Snapshot Repository</name>
-            <url>http://192.168.0.103:16386/repository/maven-public/</url>
+            <url>http://nexus.ngrok.xiaomiqiu.cn/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
