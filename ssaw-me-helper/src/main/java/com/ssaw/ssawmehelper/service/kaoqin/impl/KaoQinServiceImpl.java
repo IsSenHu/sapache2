@@ -189,7 +189,7 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
         paramMap.put("toDate", toDate);
         paramMap.put("resultType", "(1=1)");
         try {
-            String result = HttpConnectionUtils.doPost("http://ehr.1919.cn:81/api/KQService/QueryKQResult?ap=" + employee.getEhrAp(),
+            String result = HttpConnectionUtils.doPost("http://ehr.1919.cn/api/KQService/QueryKQResult?ap=" + employee.getEhrAp(),
                     JSON.toJSONString(paramMap), false);
             JSONObject jsonObject = JSON.parseObject(result);
             String jDataXml = jsonObject.getString("JDataXML");
@@ -234,7 +234,7 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
             kqOverJSONObject.put("fromDate", formDate);
             kqOverJSONObject.put("toDate", simpleDateFormat.format(c.getTime()));
             kqOverJSONObject.put("spStatus", "4");
-            String kqOver = HttpConnectionUtils.doPost("http://ehr.1919.cn:81/api/KQService/QueryKQOver?ap=" +
+            String kqOver = HttpConnectionUtils.doPost("http://ehr.1919.cn/api/KQService/QueryKQOver?ap=" +
                     employeePO.getEhrAp(), kqOverJSONObject.toJSONString(), false);
             String kqOverJDataXml = JSON.parseObject(kqOver).getString("JDataXML");
             String kqOverNewDataSet = JSON.parseObject(kqOverJDataXml).getString("NewDataSet");
@@ -281,7 +281,7 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
             kqLeaveJSONObject.put("spStatus", "4");
             String kqLeave;
             try {
-                kqLeave = HttpConnectionUtils.doPost("http://ehr.1919.cn:81/api/KQService/QueryKQLeave?ap=" +
+                kqLeave = HttpConnectionUtils.doPost("http://ehr.1919.cn/api/KQService/QueryKQLeave?ap=" +
                         employeePO.getEhrAp(), kqLeaveJSONObject.toJSONString(), false);
                 String kqLeaveJDataXml = JSON.parseObject(kqLeave).getString("JDataXML");
                 String kqLeaveNewDataSet = JSON.parseObject(kqLeaveJDataXml).getString("NewDataSet");
