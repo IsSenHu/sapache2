@@ -191,6 +191,7 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
         try {
             String result = HttpConnectionUtils.doPost("http://ehr.1919.cn/api/KQService/QueryKQResult?ap=" + employee.getEhrAp(),
                     JSON.toJSONString(paramMap), false);
+            log.info("考勤查询结果:{}", result);
             JSONObject jsonObject = JSON.parseObject(result);
             String jDataXml = jsonObject.getString("JDataXML");
             String newDataSet = JSON.parseObject(jDataXml).getString("NewDataSet");
