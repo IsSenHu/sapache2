@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.util.http.HttpConnectionUtils;
+import com.ssaw.ssawmehelper.config.KqConfig;
 import com.ssaw.ssawmehelper.constants.KaoqinConstants;
 import com.ssaw.ssawmehelper.dao.mapper.employee.CommitOverTimeMapper;
 import com.ssaw.ssawmehelper.dao.po.employee.CommitOverTimePO;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
@@ -36,6 +38,9 @@ public class CommitOverTimeHandler extends BaseHandler {
 
     private final EmployeeService employeeService;
 
+    @Resource
+    private KqConfig kqConfig;
+
     @Autowired
     public CommitOverTimeHandler(CommitOverTimeMapper commitOverTimeMapper, EmployeeService employeeService) {
         this.commitOverTimeMapper = commitOverTimeMapper;
@@ -51,9 +56,9 @@ public class CommitOverTimeHandler extends BaseHandler {
             realWork(reqVO, employee);
         } catch (Exception e) {
             log.error("提交加班申请失败，结果:", e);
-            CommitOverTimePO commitOverTimePO = CopyUtil.copyProperties(reqVO, new CommitOverTimePO());
-            commitOverTimePO.setSuccess(false);
-            commitOverTimeMapper.insert(commitOverTimePO);
+            CommitOverTimePO po = CopyUtil.copyProperties(reqVO, new CommitOverTimePO());
+            po.setSuccess(false);
+            commitOverTimeMapper.insert(po);
         }
     }
 
@@ -115,11 +120,11 @@ public class CommitOverTimeHandler extends BaseHandler {
         reqJsonObject.put("JDataXML", jDataXml);
         reqJsonObject.put("JOriginalDataXML", jOriginalDataXml);
         String json = JSON.toJSONString(reqJsonObject);
-        String resp = HttpConnectionUtils.doPost(url + "api/ComService/UpdateEx?ap=" + employee.getEhrAp(),
+        String resp = HttpConnectionUtils.doPost(kqConfig.getUrl() + "api/ComService/UpdateEx?ap=" + employee.getEhrAp(),
                 json, false);
         log.info("提交加班申请结果:{}", resp);
-        final String addedID = "AddedID";
-        if (StringUtils.contains(resp, addedID)) {
+        final String id = "AddedID";
+        if (StringUtils.contains(resp, id)) {
             String signIds = resp.split("<AddedID>")[1].split("</AddedID>")[0];
             String startWf = startWf("050104", signIds, employee);
             log.info("提交审批结果:{}", startWf);
@@ -135,25 +140,25 @@ public class CommitOverTimeHandler extends BaseHandler {
     public void task() {
         QueryWrapper<CommitOverTimePO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("success", false);
-        List<CommitOverTimePO> commitOverTimePOList = commitOverTimeMapper.selectList(queryWrapper);
-        if (CollectionUtils.isEmpty(commitOverTimePOList)) {
-            log.info("没有失败的提交加班记录:{}", commitOverTimePOList);
+        List<CommitOverTimePO> pos = commitOverTimeMapper.selectList(queryWrapper);
+        if (CollectionUtils.isEmpty(pos)) {
+            log.info("没有失败的提交加班记录:{}", pos);
             return;
         }
-        for (CommitOverTimePO commitOverTimePO : commitOverTimePOList) {
+        for (CommitOverTimePO commitOverTimePo : pos) {
             try {
-                EmployeePO employeePO = employeeService.getEmployeePO(commitOverTimePO.getBn());
-                if (Objects.isNull(employeePO)) {
+                EmployeePO po = employeeService.getEmployeePO(commitOverTimePo.getBn());
+                if (Objects.isNull(po)) {
                     continue;
                 }
-                CommitOverTimeInfoReqVO reqVO = CopyUtil.copyProperties(commitOverTimePO, new CommitOverTimeInfoReqVO());
-                realWork(reqVO, employeePO);
+                CommitOverTimeInfoReqVO reqVO = CopyUtil.copyProperties(commitOverTimePo, new CommitOverTimeInfoReqVO());
+                realWork(reqVO, po);
                 // 没有出现异常任务执行成功
-                commitOverTimePO.setSuccess(true);
-                commitOverTimeMapper.updateById(commitOverTimePO);
+                commitOverTimePo.setSuccess(true);
+                commitOverTimeMapper.updateById(commitOverTimePo);
             } catch (Exception e) {
                 // 什么都不做
-                log.error("出现异常, 加班单:{}, 补偿失败:", commitOverTimePO, e);
+                log.error("出现异常, 加班单:{}, 补偿失败:", commitOverTimePo, e);
             }
         }
     }

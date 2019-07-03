@@ -2,11 +2,11 @@ package com.ssaw.ssawmehelper.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ssaw.commons.util.http.HttpConnectionUtils;
+import com.ssaw.ssawmehelper.config.KqConfig;
 import com.ssaw.ssawmehelper.dao.mapper.employee.WfMapper;
 import com.ssaw.ssawmehelper.dao.po.employee.EmployeePO;
 import com.ssaw.ssawmehelper.dao.po.employee.WfPO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
@@ -18,8 +18,8 @@ import java.util.Calendar;
 @Slf4j
 public class BaseHandler {
 
-    @Value("kq.url")
-    protected String url;
+    @Resource
+    private KqConfig kqConfig;
 
     @Resource
     private WfMapper wfMapper;
@@ -71,17 +71,17 @@ public class BaseHandler {
             jsonObject.put("spbm", spbm);
             jsonObject.put("signIDs", signIds);
             jsonObject.put("A0188", employee.getEhrBn());
-            return HttpConnectionUtils.doPost(url + "api/WFService/StartWF?ap=" + employee.getEhrAp(),
+            return HttpConnectionUtils.doPost(kqConfig.getUrl() + "api/WFService/StartWF?ap=" + employee.getEhrAp(),
                     jsonObject.toJSONString(), false);
         } catch (Exception e) {
             log.error("提交审批失败:", e);
-            WfPO wfPO = new WfPO();
-            wfPO.setSpbm(spbm);
-            wfPO.setSignIds(signIds);
-            wfPO.setEhrBn(employee.getEhrBn());
-            wfPO.setEhrAp(employee.getEhrAp());
-            wfPO.setSuccess(false);
-            wfMapper.insert(wfPO);
+            WfPO po = new WfPO();
+            po.setSpbm(spbm);
+            po.setSignIds(signIds);
+            po.setEhrBn(employee.getEhrBn());
+            po.setEhrAp(employee.getEhrAp());
+            po.setSuccess(false);
+            wfMapper.insert(po);
             return null;
         }
     }
@@ -92,7 +92,7 @@ public class BaseHandler {
             jsonObject.put("spbm", po.getSpbm());
             jsonObject.put("signIDs", po.getSignIds());
             jsonObject.put("A0188", po.getEhrBn());
-            String doPost = HttpConnectionUtils.doPost(url + "api/WFService/StartWF?ap=" + po.getEhrAp(),
+            HttpConnectionUtils.doPost(kqConfig.getUrl() + "api/WFService/StartWF?ap=" + po.getEhrAp(),
                     jsonObject.toJSONString(), false);
             po.setSuccess(true);
             wfMapper.updateById(po);

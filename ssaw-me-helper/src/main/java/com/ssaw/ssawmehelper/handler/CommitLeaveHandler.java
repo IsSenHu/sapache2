@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ssaw.commons.util.bean.CopyUtil;
 import com.ssaw.commons.util.http.HttpConnectionUtils;
+import com.ssaw.ssawmehelper.config.KqConfig;
 import com.ssaw.ssawmehelper.constants.KaoqinConstants;
 import com.ssaw.ssawmehelper.dao.mapper.employee.CommitLeaveMapper;
 import com.ssaw.ssawmehelper.dao.po.employee.CommitLeavePO;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -37,6 +39,9 @@ public class CommitLeaveHandler extends BaseHandler {
     private final CommitLeaveMapper commitLeaveMapper;
 
     private final EmployeeService employeeService;
+
+    @Resource
+    private KqConfig kqConfig;
 
     @Autowired
     public CommitLeaveHandler(EmployeeService employeeService, CommitLeaveMapper commitLeaveMapper) {
@@ -61,16 +66,16 @@ public class CommitLeaveHandler extends BaseHandler {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    void realWorkDo(CommitLeaveReqVO reqVO, EmployeePO employeePO) throws IOException {
+    void realWorkDo(CommitLeaveReqVO reqVO, EmployeePO po) throws IOException {
         JSONObject calLeaveTimeObj = new JSONObject();
-        calLeaveTimeObj.put("A0188", employeePO.getEhrBn());
-        calLeaveTimeObj.put("A0188s", employeePO.getEhrBn());
+        calLeaveTimeObj.put("A0188", po.getEhrBn());
+        calLeaveTimeObj.put("A0188s", po.getEhrBn());
         calLeaveTimeObj.put("LEAVE_BEGIN", reqVO.getBeginTime());
         calLeaveTimeObj.put("LEAVE_END", reqVO.getEndTime());
         calLeaveTimeObj.put("LEAVE_TYPE", "19");
         calLeaveTimeObj.put("ID", 0);
         calLeaveTimeObj.put("flag", 0);
-        String leaveTime = HttpConnectionUtils.doPost(url + "api/KQService/CalLeaveTime?ap=" + employeePO.getEhrAp(),
+        String leaveTime = HttpConnectionUtils.doPost(kqConfig.getUrl() + "api/KQService/CalLeaveTime?ap=" + po.getEhrAp(),
                 calLeaveTimeObj.toJSONString(), false);
         assert leaveTime != null;
         String errorMsg = ((JSONObject) JSON.parseArray(leaveTime).get(0)).getString("ErrorMsg");
@@ -96,7 +101,7 @@ public class CommitLeaveHandler extends BaseHandler {
         JSONObject data = new JSONObject();
         data.put("K_LEAVE_K_ID", StringUtils.EMPTY);
         data.put("K_LEAVE_LEAVE_REASON", "调休");
-        data.put("K_LEAVE_A0188", employeePO.getEhrBn());
+        data.put("K_LEAVE_A0188", po.getEhrBn());
         data.put("K_LEAVE_LEAVE_TYPE", "19");
         data.put("K_LEAVE_LEAVE_BEGIN", reqVO.getBeginTime());
         data.put("K_LEAVE_LEAVE_END", reqVO.getEndTime());
@@ -116,13 +121,13 @@ public class CommitLeaveHandler extends BaseHandler {
         reqJsonObject.put("JOriginalDataXML", jOriginalDataXml);
         reqJsonObject.put("JDataXML", jDataXml);
         String json = JSON.toJSONString(reqJsonObject);
-        String result = HttpConnectionUtils.doPost(url + "api/ComService/UpdateEx?ap=" + employeePO.getEhrAp(),
+        String result = HttpConnectionUtils.doPost(kqConfig.getUrl() + "api/ComService/UpdateEx?ap=" + po.getEhrAp(),
                 json, false);
         log.info("提交调休申请结果:{}", result);
-        final String addedID = "AddedID";
-        if (StringUtils.contains(result, addedID)) {
+        final String id = "AddedID";
+        if (StringUtils.contains(result, id)) {
             String signIds = result.split("<AddedID>")[1].split("</AddedID>")[0];
-            String startWf = startWf("050102", signIds, employeePO);
+            String startWf = startWf("050102", signIds, po);
             log.info("提交审批结果:{}", startWf);
         } else {
             log.info("调休申请可能有异常:{}", URLDecoder.decode(result.split("<Message>")[1].split("</Message>")[0], "utf-8"));
@@ -136,25 +141,25 @@ public class CommitLeaveHandler extends BaseHandler {
     public void task() {
         QueryWrapper<CommitLeavePO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("success", false);
-        List<CommitLeavePO> commitLeavePOList = commitLeaveMapper.selectList(queryWrapper);
-        if (CollectionUtils.isEmpty(commitLeavePOList)) {
-            log.info("没有失败的提交调休记录:{}", commitLeavePOList);
+        List<CommitLeavePO> commitLeavePoList = commitLeaveMapper.selectList(queryWrapper);
+        if (CollectionUtils.isEmpty(commitLeavePoList)) {
+            log.info("没有失败的提交调休记录:{}", commitLeavePoList);
             return;
         }
-        for (CommitLeavePO commitLeavePO : commitLeavePOList) {
+        for (CommitLeavePO po : commitLeavePoList) {
             try {
-                EmployeePO employeePO = employeeService.getEmployeePO(commitLeavePO.getBn());
-                if (Objects.isNull(employeePO)) {
+                EmployeePO employeePo = employeeService.getEmployeePO(po.getBn());
+                if (Objects.isNull(employeePo)) {
                     continue;
                 }
-                CommitLeaveReqVO reqVO = CopyUtil.copyProperties(commitLeavePO, new CommitLeaveReqVO());
-                realWorkDo(reqVO, employeePO);
+                CommitLeaveReqVO reqVO = CopyUtil.copyProperties(po, new CommitLeaveReqVO());
+                realWorkDo(reqVO, employeePo);
                 // 没有出现异常任务执行成功
-                commitLeavePO.setSuccess(true);
-                commitLeaveMapper.updateById(commitLeavePO);
+                po.setSuccess(true);
+                commitLeaveMapper.updateById(po);
             } catch (Exception e) {
                 // 什么都不做
-                log.error("出现异常, 加班单:{}, 补偿失败:", commitLeavePO, e);
+                log.error("出现异常, 加班单:{}, 补偿失败:", po, e);
             }
         }
     }
