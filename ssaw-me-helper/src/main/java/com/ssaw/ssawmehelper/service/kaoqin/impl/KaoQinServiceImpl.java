@@ -22,6 +22,7 @@ import com.ssaw.ssawmehelper.service.kaoqin.KaoQinService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,9 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
 
     private final CommitLeaveHandler commitLeaveHandler;
 
+    @Value("kq.url")
+    private String url;
+
     @Autowired
     public KaoQinServiceImpl(EmployeeMapper employeeMapper, KaoQinDao kaoQinDao, CommitOverTimeHandler commitOverTimeHandler, CommitLeaveHandler commitLeaveHandler) {
         this.employeeMapper = employeeMapper;
@@ -78,17 +82,17 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
         KaoQinInfoQueryVO data = pageReqVO.getData();
         QueryWrapper<EmployeePO> queryWrapper = new QueryWrapper<EmployeePO>()
                 .eq("username", UserContextHolder.currentUser().getUsername());
-        EmployeePO employeePO = employeeMapper.selectOne(queryWrapper);
-        if (Objects.isNull(employeePO)) {
+        EmployeePO employeePo = employeeMapper.selectOne(queryWrapper);
+        if (Objects.isNull(employeePo)) {
             tableData.setTotals(0L);
             tableData.setTotalPages(0);
             tableData.setContent(Lists.newArrayList());
         } else {
-            List<KaoQinInfoVO> kaoQinInfoVOList = getKaoQinInfoVOList(data.getYear(), data.getMonth(), employeePO);
-            Set<String> allOnlineTime = kaoQinDao.allOnlineTime(employeePO.getBn());
-            Set<String> allForgetTime = kaoQinDao.allForgetTime(employeePO.getBn());
-            Set<String> allCommitOverTime = kaoQinDao.allCommitOverTime(employeePO.getBn());
-            Set<String> allCommitLeave = kaoQinDao.allCommitLeave(employeePO.getBn());
+            List<KaoQinInfoVO> kaoQinInfoVOList = getKaoQinInfoVoList(data.getYear(), data.getMonth(), employeePo);
+            Set<String> allOnlineTime = kaoQinDao.allOnlineTime(employeePo.getBn());
+            Set<String> allForgetTime = kaoQinDao.allForgetTime(employeePo.getBn());
+            Set<String> allCommitOverTime = kaoQinDao.allCommitOverTime(employeePo.getBn());
+            Set<String> allCommitLeave = kaoQinDao.allCommitLeave(employeePo.getBn());
 
             kaoQinInfoVOList.forEach(k -> {
                 String dutyDate = k.getDutyDate();
@@ -173,7 +177,7 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
         }
     }
 
-    private List<KaoQinInfoVO> getKaoQinInfoVOList(Integer year, Integer month, EmployeePO employee) {
+    private List<KaoQinInfoVO> getKaoQinInfoVoList(Integer year, Integer month, EmployeePO employee) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
@@ -189,34 +193,34 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
         paramMap.put("toDate", toDate);
         paramMap.put("resultType", "(1=1)");
         try {
-            String result = HttpConnectionUtils.doPost("http://mehr.1919.cn/api/KQService/QueryKQResult?ap=" + employee.getEhrAp(),
+            String result = HttpConnectionUtils.doPost(url + "api/KQService/QueryKQResult?ap=" + employee.getEhrAp(),
                     JSON.toJSONString(paramMap), false);
             log.info("考勤查询结果:{}", result);
             JSONObject jsonObject = JSON.parseObject(result);
             String jDataXml = jsonObject.getString("JDataXML");
             String newDataSet = JSON.parseObject(jDataXml).getString("NewDataSet");
             String data = JSON.parseObject(newDataSet).getString("DATA");
-            JSONArray dataJSONOArray = JSON.parseArray(data);
+            JSONArray jsonArray = JSON.parseArray(data);
             Map<String, String> kqOverInfo = getKqOverInfo(fromDate, toDate, employee);
             Map<String, String> kqLeaveInfo = getKqLeaveInfo(fromDate, toDate, employee);
             try {
-                for (Object dataJSONObject : dataJSONOArray.toArray()) {
-                    String kDayDutyDate = ((JSONObject) dataJSONObject).getString("K_DAY_DUTY_DATE");
+                for (Object o : jsonArray.toArray()) {
+                    String kDayDutyDate = ((JSONObject) o).getString("K_DAY_DUTY_DATE");
                     String dateString = simpleDateFormat.format(simpleDateFormat.parse(kDayDutyDate));
-                    ((JSONObject) dataJSONObject).put("KqOverStatus", kqOverInfo.getOrDefault(dateString, "未提交"));
+                    ((JSONObject) o).put("KqOverStatus", kqOverInfo.getOrDefault(dateString, "未提交"));
                     if (kqLeaveInfo.containsKey(dateString)) {
-                        ((JSONObject) dataJSONObject).put("KqLeaveStatus", kqLeaveInfo.get(dateString));
-                    } else if (StringUtils.contains(((JSONObject) dataJSONObject).getString("K_DAY_K_DAYSTATE"), "缺勤")
-                            || StringUtils.contains(((JSONObject) dataJSONObject).getString("K_DAY_K_DAYSTATE"), "迟到")) {
-                        ((JSONObject) dataJSONObject).put("KqLeaveStatus", "未提交");
+                        ((JSONObject) o).put("KqLeaveStatus", kqLeaveInfo.get(dateString));
+                    } else if (StringUtils.contains(((JSONObject) o).getString("K_DAY_K_DAYSTATE"), "缺勤")
+                            || StringUtils.contains(((JSONObject) o).getString("K_DAY_K_DAYSTATE"), "迟到")) {
+                        ((JSONObject) o).put("KqLeaveStatus", "未提交");
                     } else {
-                        ((JSONObject) dataJSONObject).put("KqLeaveStatus", "");
+                        ((JSONObject) o).put("KqLeaveStatus", "");
                     }
                 }
             } catch (ParseException e) {
                 log.error("解析日期发生错误", e);
             }
-            return JSONArray.parseArray(dataJSONOArray.toJSONString(), KaoQinInfoVO.class);
+            return JSONArray.parseArray(jsonArray.toJSONString(), KaoQinInfoVO.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -230,15 +234,15 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
         try {
             c.setTime(simpleDateFormat.parse(toDate));
             c.add(Calendar.DAY_OF_MONTH, 1);
-            JSONObject kqOverJSONObject = new JSONObject();
-            kqOverJSONObject.put("A0188", employeePO.getEhrBn());
-            kqOverJSONObject.put("fromDate", formDate);
-            kqOverJSONObject.put("toDate", simpleDateFormat.format(c.getTime()));
-            kqOverJSONObject.put("spStatus", "4");
-            String kqOver = HttpConnectionUtils.doPost("http://mehr.1919.cn/api/KQService/QueryKQOver?ap=" +
-                    employeePO.getEhrAp(), kqOverJSONObject.toJSONString(), false);
-            String kqOverJDataXml = JSON.parseObject(kqOver).getString("JDataXML");
-            String kqOverNewDataSet = JSON.parseObject(kqOverJDataXml).getString("NewDataSet");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("A0188", employeePO.getEhrBn());
+            jsonObject.put("toDate", simpleDateFormat.format(c.getTime()));
+            jsonObject.put("fromDate", formDate);
+            jsonObject.put("spStatus", "4");
+            String kqOver = HttpConnectionUtils.doPost(url + "api/KQService/QueryKQOver?ap=" +
+                    employeePO.getEhrAp(), jsonObject.toJSONString(), false);
+            String xml = JSON.parseObject(kqOver).getString("JDataXML");
+            String kqOverNewDataSet = JSON.parseObject(xml).getString("NewDataSet");
             if (kqOverNewDataSet != null) {
                 String kqOverData = JSON.parseObject(kqOverNewDataSet).getString("DATA");
                 final String left = "[";
@@ -282,25 +286,25 @@ public class KaoQinServiceImpl extends BaseService implements KaoQinService {
             kqLeaveJSONObject.put("spStatus", "4");
             String kqLeave;
             try {
-                kqLeave = HttpConnectionUtils.doPost("http://mehr.1919.cn/api/KQService/QueryKQLeave?ap=" +
+                kqLeave = HttpConnectionUtils.doPost(url + "api/KQService/QueryKQLeave?ap=" +
                         employeePO.getEhrAp(), kqLeaveJSONObject.toJSONString(), false);
-                String kqLeaveJDataXml = JSON.parseObject(kqLeave).getString("JDataXML");
-                String kqLeaveNewDataSet = JSON.parseObject(kqLeaveJDataXml).getString("NewDataSet");
+                String xml = JSON.parseObject(kqLeave).getString("JDataXML");
+                String kqLeaveNewDataSet = JSON.parseObject(xml).getString("NewDataSet");
                 if (kqLeaveNewDataSet != null) {
                     String kqLeaveData = JSON.parseObject(kqLeaveNewDataSet).getString("DATA");
                     final String left = "[";
                     if (StringUtils.contains(kqLeaveData, left)) {
-                        JSONArray kqLeaveDataJSONOArray = JSON.parseArray(kqLeaveData);
-                        for (Object kqLeaveDataJSONObject : kqLeaveDataJSONOArray.toArray()) {
-                            String leaveBegin = ((JSONObject) kqLeaveDataJSONObject).getString("K_LEAVE_LEAVE_BEGIN");
+                        JSONArray jsonArray = JSON.parseArray(kqLeaveData);
+                        for (Object o : jsonArray.toArray()) {
+                            String leaveBegin = ((JSONObject) o).getString("K_LEAVE_LEAVE_BEGIN");
                             Date date = simpleDateFormat.parse(leaveBegin);
-                            result.put(simpleDateFormat.format(date), ((JSONObject) kqLeaveDataJSONObject).getString("K_LEAVE_SIGNEDMC"));
+                            result.put(simpleDateFormat.format(date), ((JSONObject) o).getString("K_LEAVE_SIGNEDMC"));
                         }
                     } else {
-                        JSONObject kqLeaveDataJSONObj = (JSONObject) JSON.parse(kqLeaveData);
-                        String leaveBegin = kqLeaveDataJSONObj.getString("K_LEAVE_LEAVE_BEGIN");
+                        JSONObject jsonObject = (JSONObject) JSON.parse(kqLeaveData);
+                        String leaveBegin = jsonObject.getString("K_LEAVE_LEAVE_BEGIN");
                         Date date = simpleDateFormat.parse(leaveBegin);
-                        result.put(simpleDateFormat.format(date), kqLeaveDataJSONObj.getString("K_LEAVE_SIGNEDMC"));
+                        result.put(simpleDateFormat.format(date), jsonObject.getString("K_LEAVE_SIGNEDMC"));
                     }
                 }
             } catch (IOException e) {

@@ -6,6 +6,7 @@ import com.ssaw.ssawmehelper.dao.mapper.employee.WfMapper;
 import com.ssaw.ssawmehelper.dao.po.employee.EmployeePO;
 import com.ssaw.ssawmehelper.dao.po.employee.WfPO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
@@ -16,6 +17,10 @@ import java.util.Calendar;
  */
 @Slf4j
 public class BaseHandler {
+
+    @Value("kq.url")
+    protected String url;
+
     @Resource
     private WfMapper wfMapper;
 
@@ -66,7 +71,7 @@ public class BaseHandler {
             jsonObject.put("spbm", spbm);
             jsonObject.put("signIDs", signIds);
             jsonObject.put("A0188", employee.getEhrBn());
-            return HttpConnectionUtils.doPost("http://mehr.1919.cn/api/WFService/StartWF?ap=" + employee.getEhrAp(),
+            return HttpConnectionUtils.doPost(url + "api/WFService/StartWF?ap=" + employee.getEhrAp(),
                     jsonObject.toJSONString(), false);
         } catch (Exception e) {
             log.error("提交审批失败:", e);
@@ -81,20 +86,18 @@ public class BaseHandler {
         }
     }
 
-    protected String startWf(WfPO wfPO) {
+    protected void startWf(WfPO po) {
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("spbm", wfPO.getSpbm());
-            jsonObject.put("signIDs", wfPO.getSignIds());
-            jsonObject.put("A0188", wfPO.getEhrBn());
-            String doPost = HttpConnectionUtils.doPost("http://mehr.1919.cn/api/WFService/StartWF?ap=" + wfPO.getEhrAp(),
+            jsonObject.put("spbm", po.getSpbm());
+            jsonObject.put("signIDs", po.getSignIds());
+            jsonObject.put("A0188", po.getEhrBn());
+            String doPost = HttpConnectionUtils.doPost(url + "api/WFService/StartWF?ap=" + po.getEhrAp(),
                     jsonObject.toJSONString(), false);
-            wfPO.setSuccess(true);
-            wfMapper.updateById(wfPO);
-            return doPost;
+            po.setSuccess(true);
+            wfMapper.updateById(po);
         } catch (Exception e) {
             log.error("提交审批失败:", e);
-            return null;
         }
     }
 }

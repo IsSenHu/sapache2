@@ -115,7 +115,7 @@ public class CommitOverTimeHandler extends BaseHandler {
         reqJsonObject.put("JDataXML", jDataXml);
         reqJsonObject.put("JOriginalDataXML", jOriginalDataXml);
         String json = JSON.toJSONString(reqJsonObject);
-        String resp = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/ComService/UpdateEx?ap=" + employee.getEhrAp(),
+        String resp = HttpConnectionUtils.doPost(url + "api/ComService/UpdateEx?ap=" + employee.getEhrAp(),
                 json, false);
         log.info("提交加班申请结果:{}", resp);
         final String addedID = "AddedID";

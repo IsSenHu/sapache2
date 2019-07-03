@@ -46,17 +46,17 @@ public class CommitLeaveHandler extends BaseHandler {
 
     public void work(CommitLeaveReqVO reqVO) {
         try {
-            EmployeePO employeePO = employeeService.getEmployeePO(reqVO.getBn());
-            if (Objects.isNull(employeePO)) {
+            EmployeePO po = employeeService.getEmployeePO(reqVO.getBn());
+            if (Objects.isNull(po)) {
                 return;
             }
-            realWorkDo(reqVO, employeePO);
+            realWorkDo(reqVO, po);
         } catch (Exception e) {
             log.error("提交调休申请失败:", e);
             // 记录数据库
-            CommitLeavePO commitLeavePO = CopyUtil.copyProperties(reqVO, new CommitLeavePO());
-            commitLeavePO.setSuccess(false);
-            commitLeaveMapper.insert(commitLeavePO);
+            CommitLeavePO po = CopyUtil.copyProperties(reqVO, new CommitLeavePO());
+            po.setSuccess(false);
+            commitLeaveMapper.insert(po);
         }
     }
 
@@ -70,7 +70,7 @@ public class CommitLeaveHandler extends BaseHandler {
         calLeaveTimeObj.put("LEAVE_TYPE", "19");
         calLeaveTimeObj.put("ID", 0);
         calLeaveTimeObj.put("flag", 0);
-        String leaveTime = HttpConnectionUtils.doPost("http://mehr.1919.cn/api/KQService/CalLeaveTime?ap=" + employeePO.getEhrAp(),
+        String leaveTime = HttpConnectionUtils.doPost(url + "api/KQService/CalLeaveTime?ap=" + employeePO.getEhrAp(),
                 calLeaveTimeObj.toJSONString(), false);
         assert leaveTime != null;
         String errorMsg = ((JSONObject) JSON.parseArray(leaveTime).get(0)).getString("ErrorMsg");
@@ -116,7 +116,7 @@ public class CommitLeaveHandler extends BaseHandler {
         reqJsonObject.put("JOriginalDataXML", jOriginalDataXml);
         reqJsonObject.put("JDataXML", jDataXml);
         String json = JSON.toJSONString(reqJsonObject);
-        String result = HttpConnectionUtils.doPost("http://mehr.1919.cn/api/ComService/UpdateEx?ap=" + employeePO.getEhrAp(),
+        String result = HttpConnectionUtils.doPost(url + "api/ComService/UpdateEx?ap=" + employeePO.getEhrAp(),
                 json, false);
         log.info("提交调休申请结果:{}", result);
         final String addedID = "AddedID";
