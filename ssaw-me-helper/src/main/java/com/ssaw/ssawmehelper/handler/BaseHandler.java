@@ -66,7 +66,7 @@ public class BaseHandler {
             jsonObject.put("spbm", spbm);
             jsonObject.put("signIDs", signIds);
             jsonObject.put("A0188", employee.getEhrBn());
-            return HttpConnectionUtils.doPost("http://ehr.1919.cn/api/WFService/StartWF?ap=" + employee.getEhrAp(),
+            return HttpConnectionUtils.doPost("http://mehr.1919.cn/api/WFService/StartWF?ap=" + employee.getEhrAp(),
                     jsonObject.toJSONString(), false);
         } catch (Exception e) {
             log.error("提交审批失败:", e);
@@ -87,7 +87,7 @@ public class BaseHandler {
             jsonObject.put("spbm", wfPO.getSpbm());
             jsonObject.put("signIDs", wfPO.getSignIds());
             jsonObject.put("A0188", wfPO.getEhrBn());
-            String doPost = HttpConnectionUtils.doPost("http://ehr.1919.cn/api/WFService/StartWF?ap=" + wfPO.getEhrAp(),
+            String doPost = HttpConnectionUtils.doPost("http://mehr.1919.cn/api/WFService/StartWF?ap=" + wfPO.getEhrAp(),
                     jsonObject.toJSONString(), false);
             wfPO.setSuccess(true);
             wfMapper.updateById(wfPO);

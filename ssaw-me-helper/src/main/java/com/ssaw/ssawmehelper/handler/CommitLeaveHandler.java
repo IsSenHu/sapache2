@@ -70,7 +70,7 @@ public class CommitLeaveHandler extends BaseHandler {
         calLeaveTimeObj.put("LEAVE_TYPE", "19");
         calLeaveTimeObj.put("ID", 0);
         calLeaveTimeObj.put("flag", 0);
-        String leaveTime = HttpConnectionUtils.doPost("http://ehr.1919.cn/api/KQService/CalLeaveTime?ap=" + employeePO.getEhrAp(),
+        String leaveTime = HttpConnectionUtils.doPost("http://mehr.1919.cn/api/KQService/CalLeaveTime?ap=" + employeePO.getEhrAp(),
                 calLeaveTimeObj.toJSONString(), false);
         assert leaveTime != null;
         String errorMsg = ((JSONObject) JSON.parseArray(leaveTime).get(0)).getString("ErrorMsg");
@@ -116,7 +116,7 @@ public class CommitLeaveHandler extends BaseHandler {
         reqJsonObject.put("JOriginalDataXML", jOriginalDataXml);
         reqJsonObject.put("JDataXML", jDataXml);
         String json = JSON.toJSONString(reqJsonObject);
-        String result = HttpConnectionUtils.doPost("http://ehr.1919.cn/api/ComService/UpdateEx?ap=" + employeePO.getEhrAp(),
+        String result = HttpConnectionUtils.doPost("http://mehr.1919.cn/api/ComService/UpdateEx?ap=" + employeePO.getEhrAp(),
                 json, false);
         log.info("提交调休申请结果:{}", result);
         final String addedID = "AddedID";
