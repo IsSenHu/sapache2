@@ -11,6 +11,7 @@ import com.ssaw.ssawauthenticatecenterfeign.annotations.Menu;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityApi;
 import com.ssaw.ssawauthenticatecenterfeign.annotations.SecurityMethod;
 import com.ssaw.ssawmehelper.api.BaseController;
+import com.ssaw.ssawmehelper.config.KqConfig;
 import com.ssaw.ssawmehelper.dao.po.employee.EmployeePO;
 import com.ssaw.ssawmehelper.dao.redis.KaoQinDao;
 import com.ssaw.ssawmehelper.model.vo.kaoqin.*;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -53,6 +55,9 @@ public class KaoqinController extends BaseController {
     private final KaoQinService kaoQinService;
 
     private final KaoQinDao kaoQinDao;
+
+    @Resource
+    private KqConfig kqConfig;
 
     @Autowired
     public KaoqinController(ApplicationContext context, EmployeeService employeeService, KaoQinService kaoQinService, KaoQinDao kaoQinDao) {
@@ -201,7 +206,7 @@ public class KaoqinController extends BaseController {
         loginParam.put("uname", registerReqVO.getBn());
         loginParam.put("pwd", registerReqVO.getPassword());
         try {
-            String resp = HttpConnectionUtils.doPost("https://ehr.1919.cn/api/LoginService/Login", loginParam.toJSONString(), true);
+            String resp = HttpConnectionUtils.doPost(kqConfig.getUrl() + "api/LoginService/Login", loginParam.toJSONString(), true);
             JSONObject employeeInfo = JSON.parseObject(resp);
             assert employeeInfo != null;
             assert employeeInfo.getJSONObject("_UserInfo") != null;
