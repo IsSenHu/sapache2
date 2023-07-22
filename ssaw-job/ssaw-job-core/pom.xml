@@ -15,7 +15,7 @@
     <description>核心依赖</description>
 
     <properties>
-        <quartz.version>2.3.0</quartz.version>
+        <quartz.version>2.3.2</quartz.version>
     </properties>
 
     <dependencies>
